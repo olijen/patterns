@@ -5,7 +5,8 @@ load([
 	'AbstractFactory',
 	'ConcreteFactorys',
 	'AbstractProducts',
-	'ConcreteProducts']);
+	'ConcreteProducts,
+']);
 
 	$googleFactory = new Google;
 	$googleFactory->createSmartphone('Android');

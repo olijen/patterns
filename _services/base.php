@@ -16,3 +16,10 @@ function d($text, $key = false) {
 	var_dump($text);
 	echo '<hr />';
 }
+
+function loadAll($dirrectory, $recursive = false) {
+    //...
+    if ($recursive)
+        loadAll($dirrectory, true);
+}
+

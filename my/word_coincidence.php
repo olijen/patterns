@@ -1,23 +1,18 @@
 <?php
-	/*header('Content-Type: text/html; charset=UTF-8');
-
-	mb_internal_encoding('UTF-8'); 
-	mb_http_output('UTF-8'); 
-	
-	mb_http_input('UTF-8'); 
-	mb_regex_encoding('UTF-8');*/
+	header('Content-Type: text/html; charset=utf-8');
+    setlocale(LC_ALL,'ru_RU.UTF-8');
 ?>
 
 <html>
 <head>
-	<!--meta charset="UTF-8"-->
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
 	<form method="POST">
 		<h3>Enter the text</h3>
 		<textarea name="text" cols="50" rows="5">
 			<?= !empty($_REQUEST['text']) ? $_REQUEST['text'] :
-				"Мой замок был ограблен\nНа меня напал высокоуровневый замок\nОграблен замок моего товарища";
+				"РњРѕР№ Р·Р°РјРѕРє Р±С‹Р» РѕРіСЂР°Р±Р»РµРЅ\nРќР° РјРµРЅСЏ РЅР°РїР°Р» РІС‹СЃРѕРєРѕСѓСЂРѕРІРЅРµРІС‹Р№ Р·Р°РјРѕРє\nРћРіСЂР°Р±Р»РµРЅ Р·Р°РјРѕРє РјРѕРµРіРѕ С‚РѕРІР°СЂРёС‰Р°";
 			?>
 		</textarea> <br />
 		<input type="submit" name="get_statistic" value="Get statistic" />
@@ -27,7 +22,7 @@
 
 <?php
 
-//Расширяемый класс для сбора статистики строк в стиле "over engineering"
+//Р Р°СЃС€РёСЂСЏРµРјС‹Р№ РєР»Р°СЃСЃ РґР»СЏ СЃР±РѕСЂР° СЃС‚Р°С‚РёСЃС‚РёРєРё СЃС‚СЂРѕРє РІ СЃС‚РёР»Рµ "over engineering"
 
 class Text
 {
@@ -43,18 +38,23 @@ class Text
 			$this->_lineCollection[] = new Line($value);
 	}
 	
-	//Начинаем сбор статистики
-	//Методы статистики разделены для дальнейшего отдельного использования в клиентском приложении
-	//К примеру, если нужно добавить строки из другого источника. Стартуем статистику -> добавляем строки -> получаем статистику
+	//РќР°С‡РёРЅР°РµРј СЃР±РѕСЂ СЃС‚Р°С‚РёСЃС‚РёРєРё
+	//РњРµС‚РѕРґС‹ СЃС‚Р°С‚РёСЃС‚РёРєРё СЂР°Р·РґРµР»РµРЅС‹ РґР»СЏ РґР°Р»СЊРЅРµР№С€РµРіРѕ РѕС‚РґРµР»СЊРЅРѕРіРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РІ РєР»РёРµРЅС‚СЃРєРѕРј РїСЂРёР»РѕР¶РµРЅРёРё
+	//Рљ РїСЂРёРјРµСЂСѓ, РµСЃР»Рё РЅСѓР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ СЃС‚СЂРѕРєРё РёР· РґСЂСѓРіРѕРіРѕ РёСЃС‚РѕС‡РЅРёРєР°. РЎС‚Р°СЂС‚СѓРµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ -> РґРѕР±Р°РІР»СЏРµРј СЃС‚СЂРѕРєРё -> РїРѕР»СѓС‡Р°РµРј СЃС‚Р°С‚РёСЃС‚РёРєСѓ
 	public function startStatistic()
 	{
 		foreach ($this->_lineCollection as $line)
 			$this->coincidenceRecord($line);
 		return $this;
 	}
+    
+    public function getLines()
+    {
+        return $this->_lineCollection;
+    }
 	
-	//Записываем совпадения. Используем ключ массива, как слово
-	//Метод так же может быть использован в клиентском коде
+	//Р—Р°РїРёСЃС‹РІР°РµРј СЃРѕРІРїР°РґРµРЅРёСЏ. РСЃРїРѕР»СЊР·СѓРµРј РєР»СЋС‡ РјР°СЃСЃРёРІР°, РєР°Рє СЃР»РѕРІРѕ
+	//РњРµС‚РѕРґ С‚Р°Рє Р¶Рµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°РЅ РІ РєР»РёРµРЅС‚СЃРєРѕРј РєРѕРґРµ
 	public function coincidenceRecord(Line $line)
 	{
 		foreach ($line->getWords() as $word) {
@@ -65,7 +65,7 @@ class Text
 		return $this;
 	}
 	
-	//Возвращаем результаты статистики
+	//Р’РѕР·РІСЂР°С‰Р°РµРј СЂРµР·СѓР»СЊС‚Р°С‚С‹ СЃС‚Р°С‚РёСЃС‚РёРєРё
 	public function getStatistic()
 	{
 		if (!$this->_coincidence)
@@ -73,44 +73,49 @@ class Text
 		return $this->_coincidence;
 	}
 	
-	//Представление статистики. В идеале - использовать отдельный класс и шаблон
-	public function getStatisticView()
-	{
-		if (!$this->_coincidence)
-			$this->startStatistic();
-			
-		/*echo "<br />Общая статистика: <br />";
-		var_dump($this->_coincidence);
-		echo "<br /><hr />";*/
-		
-		//Алгоритм анализа массива слов
-		//D идеале выносится в отдельный метод, формирующий массив или объект-стратегию для логики отбора статистики)
-		$result = '<br />Word statistic:<hr />';
-		asort($this->_coincidence, SORT_NUMERIC);
-		$this->_coincidence = array_reverse($this->_coincidence, true);
-		//Буферизируем слова
-		$wordBuffer = [];
-		//Запоминаем последнее количество
-		$last	    = 0;
-		foreach ($this->_coincidence as $word => $count) {
-			//echo $word . " " . $count . " <br>";
-			if ($last !== $count && $last !== 0) {
-				//Закрепляем буфер
-				$result = $result . "\"" . implode(" ", $wordBuffer) . "\" | Совпадений: " . ($count + 1) . " <br />";
-			}
-			if ($count <= 1) break;
-			$wordBuffer[] = $word;
-			$last = $count;
-		}
-		return $result;
-	}
-	
-	//Быстрый старт для цепочки выражений. Рендерит статистику.
+	//Р‘С‹СЃС‚СЂС‹Р№ СЃС‚Р°СЂС‚ РґР»СЏ С†РµРїРѕС‡РєРё РІС‹СЂР°Р¶РµРЅРёР№. Р РµРЅРґРµСЂРёС‚ СЃС‚Р°С‚РёСЃС‚РёРєСѓ.
 	public static function quickStatistic($text)
 	{
-		$text = new Text($text);
-		echo $text->getStatisticView();
+        $view = new StatisticView($text = new Text($text));
+		echo $view->getStatisticView();
 		return $text;
+	}
+}
+
+class StatisticView
+{
+    protected $_text;
+    
+    public function __construct($text)
+    {
+        $this->_text = $text;
+    }
+    
+    //РџСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё. Р’ РёРґРµР°Р»Рµ - РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РѕС‚РґРµР»СЊРЅС‹Р№ РєР»Р°СЃСЃ Рё С€Р°Р±Р»РѕРЅ
+	public function getStatisticView()
+	{
+	    $statistic = $this->_text->getStatistic();
+		
+		//РђР»РіРѕСЂРёС‚Рј Р°РЅР°Р»РёР·Р° РјР°СЃСЃРёРІР° СЃР»РѕРІ
+		//Р’ РёРґРµР°Р»Рµ РІС‹РЅРѕСЃРёС‚СЃСЏ РІ РѕС‚РґРµР»СЊРЅС‹Р№ РјРµС‚РѕРґ, С„РѕСЂРјРёСЂСѓСЋС‰РёР№ РјР°СЃСЃРёРІ РёР»Рё РѕР±СЉРµРєС‚-СЃС‚СЂР°С‚РµРіРёСЋ РґР»СЏ Р»РѕРіРёРєРё РѕС‚Р±РѕСЂР° СЃС‚Р°С‚РёСЃС‚РёРєРё)
+		$result = '<br />Word statistic:<hr />1)<br />';
+		asort($statistic, SORT_NUMERIC);
+		$statistic = array_reverse($statistic, true);
+        var_dump($statistic);
+		foreach ($statistic as $word => $count) {
+            if ($count <= 1) break;
+            $result = $result . "\"" . $word . "\" | РЎРѕРІРїР°РґРµРЅРёР№: " . ($count) . " <br />";
+            $wordsForFind .= $word . ' ';
+		}
+        
+        $result2 = '<hr />2)<br />' . $wordsForFind . " | РЎРѕРІРїР°РґРµРЅРёР№: ";
+        $countLines = 0;
+        foreach ($this->_text->getLines() as $line) {
+            if ($line->findWords($wordsForFind)) 
+                $countLines++;
+        }
+        
+		return $result . $result2 . $countLines;
 	}
 }
 
@@ -123,7 +128,6 @@ class Line
 	{
 		if (!is_string($value))
 			throw new Exception('String expected in Line construct');
-		
 		$this->_value = trim($value);
 	}
 	
@@ -134,18 +138,30 @@ class Line
 	
 	public function getWords()
 	{
-		//Отложенная инициализация, если значение будет браться из внешнего источника.
-		if (!$this->_words)
+		//РћС‚Р»РѕР¶РµРЅРЅР°СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ Р±СѓРґРµС‚ Р±СЂР°С‚СЊСЃСЏ РёР· РІРЅРµС€РЅРµРіРѕ РёСЃС‚РѕС‡РЅРёРєР°.
+		if (!$this->_words) {
 			$this->_words = explode(" ", $this->_value);
-		//Обработка слов
-		$this->_words = array_map(function($word) {
-			$word = trim($word);
-			$word = preg_replace ("/[^a-zA-ZА-Яа-я0-9\s]/", "", $word);
-			$word = mb_strtolower($word);
-			return $word;
-		}, $this->_words);
+    		//РћР±СЂР°Р±РѕС‚РєР° СЃР»РѕРІ
+    		$this->_words = array_map(function($word) {
+    			$word = trim($word);
+    			$word = preg_replace ("/[^a-zA-ZРђ-РЇР°-СЏ0-9]/u", "", $word);
+    			$word = mb_strtolower($word, 'UTF-8');
+    			return $word;
+    		}, $this->_words);
+        }
 		return $this->_words;
 	}
+    
+    //РџРѕР»РёРјРѕСЂС„РЅС‹Р№ РјРµС‚РѕРґ РїРѕРёСЃРєР° СЃР»РѕРІ РІ СЃС‚СЂРѕРєРµ
+    public function findWords($words)
+    {
+        if (is_string($words))
+            $words = explode(' ', trim($words));
+        foreach ($words as $k => $word)
+            if (!in_array($word, $this->getWords()))
+                return false;
+        return true;
+    }
 }
 
 if (!empty($_REQUEST["get_statistic"]))
